@@ -87,7 +87,7 @@ def stageUploadNexus() {
         env.STAGE = "upload_nexus - ${env.DESCRIPTION_STAGE}"
         sh "echo  ${env.STAGE}"
         nexusPublisher nexusInstanceId: 'nexus',
-        nexusRepositoryId: 'devops-laboratorio',
+        nexusRepositoryId: 'devops-usach-nexus',
         packages: [
             [$class: 'MavenPackage',
                 mavenAssetList: [
