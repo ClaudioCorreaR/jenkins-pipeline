@@ -6,6 +6,7 @@ def call()
           NEXUS_USER         = credentials('NEXUS-USER')
           NEXUS_PASSWORD     = credentials('NEXUS-PASS')
           GITHUB_TOKEN       = credentials('GITHUB_PAT')
+          REPO               = "ClaudioCorreaR"
           
       }
       parameters {

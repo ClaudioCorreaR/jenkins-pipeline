@@ -109,7 +109,7 @@ def mergeBranch(String baseBranch) {
     SHA = sh (
         script:
             """
-                curl -H "Authorization: token $GITHUB_TOKEN" https://api.github.com/repos/DipDevOpsGrp5/ms-iclab/git/refs/heads/$BRANCH_NAME | jq -r '.object.sha'
+                curl -H "Authorization: token $GITHUB_TOKEN" https://api.github.com/repos/${env.REPO}/ms-iclab/git/refs/heads/$BRANCH_NAME | jq -r '.object.sha'
             """,
         returnStdout: true
     ).trim()
@@ -117,7 +117,7 @@ def mergeBranch(String baseBranch) {
     print (SHA)
 
     sh """
-        curl -X POST -H "Accept 'application/vnd.github.v3+json'" -H "Authorization: token $GITHUB_TOKEN" https://api.github.com/repos/DipDevOpsGrp5/ms-iclab/merges -d '{"head":"$SHA","base":"$baseBranch"}'
+        curl -X POST -H "Accept 'application/vnd.github.v3+json'" -H "Authorization: token $GITHUB_TOKEN" https://api.github.com/repos/${env.REPO}/ms-iclab/merges -d '{"head":"$SHA","base":"$baseBranch"}'
     """
 }
 
@@ -126,7 +126,7 @@ def tagMainBranch() {
     SHA = sh (
         script:
             """
-                curl -H "Authorization: token $GITHUB_TOKEN" https://api.github.com/repos/DipDevOpsGrp5/ms-iclab/git/refs/heads/main | jq -r '.object.sha'
+                curl -H "Authorization: token $GITHUB_TOKEN" https://api.github.com/repos/${env.REPO}/ms-iclab/git/refs/heads/main | jq -r '.object.sha'
             """,
         returnStdout: true
     ).trim()
@@ -136,7 +136,7 @@ def tagMainBranch() {
     SHA_TAG = sh (
         script:
         """
-            curl -X POST -H "Accept 'application/vnd.github.v3+json'" -H "Authorization: token $GITHUB_TOKEN" https://api.github.com/repos/DipDevOpsGrp5/ms-iclab/git/tags -d '{"tag":"$env.POM_VERSION", "message":"$env.POM_VERSION", "object": "$SHA", "type": "commit"}' | jq -r '.sha'
+            curl -X POST -H "Accept 'application/vnd.github.v3+json'" -H "Authorization: token $GITHUB_TOKEN" https://api.github.com/repos/${env.REPO}/ms-iclab/git/tags -d '{"tag":"$env.POM_VERSION", "message":"$env.POM_VERSION", "object": "$SHA", "type": "commit"}' | jq -r '.sha'
         """,
         returnStdout: true
 
@@ -145,6 +145,6 @@ def tagMainBranch() {
     print('SHA_TAG: ' + SHA_TAG)
 
     sh """
-        curl -X POST -H "Accept 'application/vnd.github.v3+json'" -H "Authorization: token $GITHUB_TOKEN" https://api.github.com/repos/DipDevOpsGrp5/ms-iclab/git/refs -d '{"ref":"refs/tags/$env.POM_VERSION", "sha": "$SHA_TAG"}'
+        curl -X POST -H "Accept 'application/vnd.github.v3+json'" -H "Authorization: token $GITHUB_TOKEN" https://api.github.com/repos/${env.REPO}/ms-iclab/git/refs -d '{"ref":"refs/tags/$env.POM_VERSION", "sha": "$SHA_TAG"}'
     """
 }

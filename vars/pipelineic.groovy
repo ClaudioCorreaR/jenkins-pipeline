@@ -113,13 +113,13 @@ def createPullRequest(
     PR_NUMBER = sh (
         script: 
             """
-                curl -X POST -d '{"title":"PR branch $BRANCH_NAME", "body": "$env.POM_VERSION", "head":"$BRANCH_NAME","base":"develop"}' -H "Accept 'application/vnd.github.v3+json'" -H "Authorization: token $GITHUB_TOKEN" https://api.github.com/repos/DipDevOpsGrp5/ms-iclab/pulls | jq '.number'
+                curl -X POST -d '{"title":"PR branch $BRANCH_NAME", "body": "$env.POM_VERSION", "head":"$BRANCH_NAME","base":"develop"}' -H "Accept 'application/vnd.github.v3+json'" -H "Authorization: token $GITHUB_TOKEN" https://api.github.com/repos/${env.REPO}/ms-iclab/pulls | jq '.number'
             """,
         returnStdout: true
     ).trim()
     print('PR_NUMBER: ' + PR_NUMBER)
     sh """
-        curl -X POST -H "Accept: application/vnd.github.v3+json" -H "Authorization: token $GITHUB_TOKEN" https://api.github.com/repos/DipDevOpsGrp5/ms-iclab/pulls/$PR_NUMBER/requested_reviewers -d '{"reviewers":["aarevalo2017","hrojasb", "fran-fcam", "estebanmt", "ClaudioCorreaR"]}'
+        curl -X POST -H "Accept: application/vnd.github.v3+json" -H "Authorization: token $GITHUB_TOKEN" https://api.github.com/repos/${env.REPO}/ms-iclab/pulls/$PR_NUMBER/requested_reviewers -d '{"reviewers":["ClaudioCorreaR"]}'
     """
 }
 
@@ -131,7 +131,7 @@ def stageCreateReleaseBranch() {
     SHA = sh (
         script:
             """
-                curl -H "Authorization: token $GITHUB_TOKEN" https://api.github.com/repos/DipDevOpsGrp5/ms-iclab/git/refs/heads/$BRANCH_NAME | jq -r '.object.sha'
+                curl -H "Authorization: token $GITHUB_TOKEN" https://api.github.com/repos/${env.REPO}/ms-iclab/git/refs/heads/$BRANCH_NAME | jq -r '.object.sha'
             """,
         returnStdout: true
     ).trim()
@@ -141,7 +141,7 @@ def stageCreateReleaseBranch() {
     sh (
         script:
         """
-            curl -X POST -H "Accept 'application/vnd.github.v3+json'" -H "Authorization: token $GITHUB_TOKEN"  https://api.github.com/repos/DipDevOpsGrp5/ms-iclab/git/refs -d '{"ref": "refs/heads/release-v$branchVersion", "sha": "$SHA"}'
+            curl -X POST -H "Accept 'application/vnd.github.v3+json'" -H "Authorization: token $GITHUB_TOKEN"  https://api.github.com/repos/${env.REPO}/ms-iclab/git/refs -d '{"ref": "refs/heads/release-v$branchVersion", "sha": "$SHA"}'
         """,
     )
   }
