@@ -93,7 +93,7 @@ def stageUploadNexus() {
                 mavenAssetList: [
                     [classifier: '',
                     extension: 'jar',
-                    filePath: "build/DevOpsUsach2020-${env.POM_VERSION}.jar"
+                    filePath: "build/libs/DevOpsUsach2020-${env.POM_VERSION}.jar"
                 ]
             ],
                 mavenCoordinate: [
